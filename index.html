@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News API Fetch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 5rem;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ccc;
+        }
+        .card {
+            border: 1px solid #c45858;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            margin: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #c4aeae;
+            box-shadow: 0px 2px 5px 3px  #c45858;
+        }
+        input {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            width: 90%;
+            text-align: center;
+            font-size: medium;
+            color: black;
+            border-radius: 0.4rem;
+            border: none;
+        }
+        button{
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            width: 90%;
+            background-color: #8f8b8b;
+            border-radius: 0.4rem;
+            border: none;
+            font-size: 1.5rem;
+            font-family: 'Times New Roman', Times, serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="heading">
+            <h2 class="heads">News</h2>
+        </div>
+        <div class="location">
+            <input type="text" id="subject" placeholder="Enter subject.....">
+        </div>
+        <button class="submit" id="fetchNews">Submit</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const apiKey = "e8f7c2a43fa54475b9cd9423f1cdbd79";
+
+        document.getElementById("fetchNews").addEventListener("click", async () => {
+            const subject = document.getElementById("subject").value.trim();
+
+            // Validate the input
+            if (!subject) {
+                alert("Please enter a subject.");
+                return;
+            }
+
+            try {
+                // API Endpoint (example uses a hypothetical endpoint)
+                const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(subject)}&apiKey=${apiKey}`;
+                
+                // Fetch data from API
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                console.error("Error fetching news:", error);
+                document.getElementById("results").innerHTML = `<p style="color: red;">Failed to fetch news. Please try again.</p>`;
+            }
+        });
+
+        function displayResults(data) {
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
+
+            if (data.articles && data.articles.length > 0) {
+                data.articles.forEach((article) => {
+                    const articleElement = document.createElement("div");
+                    articleElement.style.margin = "10px 0";
+                    articleElement.innerHTML = `
+                        <h3>${article.title}</h3>
+                        <p>${article.description || "No description available."}</p>
+                        <a href="${article.url}" target="_blank">Read more</a>
+                    `;
+                    resultsDiv.appendChild(articleElement);
+                });
+            } else {
+                resultsDiv.innerHTML = `<p>No articles found for "${subject}".</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
