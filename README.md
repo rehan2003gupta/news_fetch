@@ -49,7 +49,7 @@ Include filtering options (e.g., by date, language, or source).
 Enhance styling for better visual appeal.
 Integrate additional news APIs for broader coverage.
 
-#Credits
+#Credits:-
 News API
 
 
